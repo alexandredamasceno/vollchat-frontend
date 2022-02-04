@@ -13,7 +13,9 @@
     </div>
     <p v-if="!goChat">Digite seu nickname para acessar o chat</p>
     <div v-else>
-      <p v-for="(message, index) in messages" v-bind:key="index">{{message}}</p>
+      <div v-for="(data, index) in messages" v-bind:key="index">
+        <p>{{`${data.nickName}-${data.date}: ${data.message}`}}</p>
+      </div>
       <div>
         <form action="">
           <input
@@ -45,25 +47,34 @@ export default {
   },
   methods: {
     enterMessage() {
-      const obj = { nick: this.nickName, message: this.message }
-      socket.emit('clientMessage', ...obj);
+      const getNickname = sessionStorage.getItem('user'); 
+      const obj = { nick: getNickname, message: this.message }
+      socket.emit('clientMessage', obj);
+      this.message = '';
     },
     addUser() {
       socket.emit('myNickname', this.nickName);
       this.users.push(this.nickName);
+      sessionStorage.setItem('user', this.nickName);
       this.nickName = '';
       this.goChat = true;
+    },
+    getallUsers() {
+      socket.on('allUsers', (allUsers) => {
+      this.users = allUsers;
+    });
+    },
+    getallMessages() {
+      socket.on('allMessages', (allMessages) => {
+      this.messages = allMessages;
+    });
     }
   },
   created() {
-    socket.on('allUsers', (allUsers) => {
-      this.users = allUsers;
-    });
+    this.getallUsers();
   },
   updated() {
-    socket.on('allUsers', (allUsers) => {
-      this.users = allUsers;
-    });
+    this.getallMessages();
   }
 }
 </script>
