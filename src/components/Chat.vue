@@ -11,12 +11,11 @@
         <button @click.prevent="addUser()">Adicionar</button>
       </form>
     </div>
-    <p v-if="!goChat">Digite seu nickname para acessar o chat</p>
-    <div v-else>
-      <div v-for="(data, index) in messages" v-bind:key="index">
-        <p>{{`${data.nickName}-${data.date}: ${data.message}`}}</p>
+    <div v-for="(data, index) in messages" v-bind:key="index">
+        <p>{{`${data.nick}-${data.date}: ${data.message}`}}</p>
       </div>
-      <div>
+      <p v-if="!goChat">Digite seu nickname para enviar uma mensagem</p>
+      <div v-else>
         <form action="">
           <input
             type="text"
@@ -24,16 +23,15 @@
             v-model="message"
           >
           <button @click.prevent="enterMessage()">Enviar</button>
-    </form>
+        </form>
       </div>
-    </div>
-    
   </main>
 </template>
 
 <script>
-// import SocketioService from '../services/socketio.service';
 import socketIOClient from 'socket.io-client';
+import createDate from '../helpers/index';
+// import axios from 'axios';
 const socket = socketIOClient('http://localhost:3000');
 export default {
   data() {
@@ -47,35 +45,45 @@ export default {
   },
   methods: {
     enterMessage() {
-      const getNickname = sessionStorage.getItem('user'); 
-      const obj = { nick: getNickname, message: this.message }
+      // Envia uma mensagem
+      const getNickname = sessionStorage.getItem('user');
+      const obj = { nick: getNickname, message: this.message, date: createDate() }
       socket.emit('clientMessage', obj);
       this.message = '';
     },
+    // Adiciona um nickname(user)
     addUser() {
       socket.emit('myNickname', this.nickName);
-      this.users.push(this.nickName);
       sessionStorage.setItem('user', this.nickName);
       this.nickName = '';
       this.goChat = true;
     },
     getallUsers() {
+      // Busca todos os usuários no BD
       socket.on('allUsers', (allUsers) => {
       this.users = allUsers;
     });
     },
     getallMessages() {
+      // Busca todas as mensagens no BD
+      console.log('fui chamado')
+      socket.emit('newMessage');
+      socket.on('newMessage', (message) => {
+        this.messages.push(message);
+      });
+    },
+    getThirtyMessages() {
+      // Busca as 30 últimas mensagens no BD
       socket.on('allMessages', (allMessages) => {
       this.messages = allMessages;
     });
-    }
+    },
   },
-  created() {
+  mounted() {
+    // Essas funções são chamadas assim que o componente é montado(renderizado)
     this.getallUsers();
+    this.getThirtyMessages();
   },
-  updated() {
-    this.getallMessages();
-  }
 }
 </script>
 
