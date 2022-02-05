@@ -1,24 +1,15 @@
-# vollchat-frontend
+# Boas vindas ao repositório do projeto VollChat!
 
-## Project setup
-```
-npm install
-```
+## Instruções iniciais
+1. Clone o repositório
+  * `git clone https://github.com/alexandredamasceno/vollchat-frontend`.
+2. Entre na pasta do repositório que você acabou de clonar:
+  * `cd vollchat-frontend`.
+3. Instale as dependências
+  * `npm install`
+4. Rodar o projeto
+  * `npm run serve`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### ATENÇÃO: por favor, certifique-se de ter rodado primeiro o backend antes de rodar o frontend.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Enjoe!
