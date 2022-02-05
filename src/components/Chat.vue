@@ -31,7 +31,6 @@
 <script>
 import socketIOClient from 'socket.io-client';
 import createDate from '../helpers/index';
-// import axios from 'axios';
 const socket = socketIOClient('http://localhost:3000');
 export default {
   data() {
@@ -64,14 +63,6 @@ export default {
       this.users = allUsers;
     });
     },
-    getallMessages() {
-      // Busca todas as mensagens no BD
-      console.log('fui chamado')
-      socket.emit('newMessage');
-      socket.on('newMessage', (message) => {
-        this.messages.push(message);
-      });
-    },
     getThirtyMessages() {
       // Busca as 30 últimas mensagens no BD
       socket.on('allMessages', (allMessages) => {
@@ -83,6 +74,10 @@ export default {
     // Essas funções são chamadas assim que o componente é montado(renderizado)
     this.getallUsers();
     this.getThirtyMessages();
+    // Esse trecho de código resolve o problemas das mensagens simultaneas
+    socket.on('newMessage', (message) => {
+      this.messages = [...this.messages, message];
+    });
   },
 }
 </script>
