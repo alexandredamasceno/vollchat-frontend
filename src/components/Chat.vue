@@ -1,29 +1,38 @@
 <template>
   <main>
-    <header><h1>VollChat</h1></header>
-    <div>
-      <h3>Active users</h3>
-      <ul> 
-        <li v-for="(user, index) in users" v-bind:key="index">{{user}}</li>
-      </ul>
-      <form>
-        <input type="text" placeholder="Digite seu nickname" v-model="nickName">
-        <button @click.prevent="addUser()">Adicionar</button>
-      </form>
-    </div>
-    <div v-for="(data, index) in messages" v-bind:key="index">
-        <p>{{`${data.nick}-${data.date}: ${data.message}`}}</p>
-      </div>
-      <p v-if="!goChat">Digite seu nickname para enviar uma mensagem</p>
-      <div v-else>
-        <form action="">
-          <input
-            type="text"
-            placeholder="Digite aqui"
-            v-model="message"
-          >
-          <button @click.prevent="enterMessage()">Enviar</button>
+    <header class="header"><h1>VollChat</h1></header>
+    <div class="main">
+      <div class="users">
+        <h3>Active users</h3>
+        <ul class="list-group"> 
+          <li class="list-group-item" v-for="(user, index) in users" v-bind:key="index">{{user}}</li>
+        </ul>
+        <form>
+          <input type="text" placeholder="Digite seu nickname" v-model="nickName" class="form-control">
+          <button class="btn btn-primary" @click.prevent="addUser()">Adicionar</button>
         </form>
+      </div>
+      <div class="chat">
+        <div v-for="(data, index) in messages" v-bind:key="index">
+          <div class="messages" >
+            <span>{{data.nick}}</span>
+            <span>{{data.message}}</span>
+            <span>{{data.date}}</span>
+          </div>
+          </div>
+          <p v-if="!goChat">Digite seu nickname para enviar uma mensagem</p>
+          <div v-else class="form-chat">
+            <form action="">
+              <input
+                type="text"
+                placeholder="Digite aqui"
+                v-model="message"
+                class="form-control"
+              >
+              <button class="btn btn-primary" @click.prevent="enterMessage()">Enviar</button>
+            </form>
+          </div>
+        </div>
       </div>
   </main>
 </template>
@@ -84,5 +93,38 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
+  .header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    background-color: #0d6efd;
+    margin-top: 0px;
+    
+  }
+  .main {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .messages {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  .button {
+    background-color: blue;
+  }
+  .chat {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 4;
+  }
+  .users {
+    margin-right: 50px;
+    margin-left: 100px;
+  }
+  .form-chat {
+    position: fixed;
+    bottom: 0;
+  }
 </style>
